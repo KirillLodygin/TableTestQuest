@@ -36,6 +36,10 @@ export const TableFields = ({ currentHeaders }: Props) => {
 		setEntityRowsArr(entityArr.current);
 	}, [entities]);
 
+	useMemo(() => {
+		console.log(entityRowsArr);
+	}, [entityRowsArr]);
+
 	return (
 		<TableBackground>
 			<Table>

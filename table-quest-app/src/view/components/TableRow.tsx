@@ -32,6 +32,19 @@ const TableCell = styled.div`
 	line-height: 130%;
 	letter-spacing: 0.1px;
 	box-sizing: border-box;
+  transition: .2s;
+  animation: show .5s 1;
+  animation-fill-mode: forwards;
+  animation-delay: .1s;
+
+  @keyframes show{
+    0%{
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
 `;
 
 const FirstColumn = styled(TableCell)`
@@ -45,15 +58,34 @@ const SecondColumn = styled(TableCell)`
 	color: #ffffff;
 `;
 
-const SecondColumnInput = styled.input`
+const SecondColumnInput = styled.div`
 	box-sizing: border-box;
 	width: 518px;
 	height: 36px;
 	border: 1px solid #414144;
 	border-radius: 6px;
-	padding: 10px;
+	padding: 8px 10px;
 	color: #71717a;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 130%;
+  letter-spacing: 0.1px;
 	background-color: #202124;
+	text-align: left;
+  opacity: 0; 
+  transition: .2s;
+  animation: show .5s 1;
+  animation-fill-mode: forwards;
+  animation-delay: .1s;
+
+  @keyframes show{
+    0%{
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
 `;
 
 const NextColumn = styled(TableCell)`
@@ -78,17 +110,13 @@ export const TableRow = ({
 	isEdited,
 	setEntityArr,
 }: Props) => {
-	const [isRowEdited, setIsRowEdited]= useState<boolean>(isEdited);
-
 	const editRow = (currenId: number) => {
-		entities.map((item) => {
+		setEntityArr(entities.map((item) => {
 			if (item.id === currenId) {
 				item.isEdited = true;
 			}
 			return item;
-		});
-		setEntityArr(entities);
-		setIsRowEdited(!isEdited);
+		}));
 	};
 
 	return (
@@ -99,28 +127,28 @@ export const TableRow = ({
 				</FirstColumn>
 			</th>
 			<th>
-				{isRowEdited ? (
-					<SecondColumnInput value={rowName} />
+				{isEdited ? (
+					<SecondColumnInput>{rowName}</SecondColumnInput>
 				) : (
 					<SecondColumn>{rowName}</SecondColumn>
 				)}
 			</th>
 			<th>
-				{isRowEdited ? <NextColumnInput value={salary} /> : <NextColumn>{salary}</NextColumn>}
+				{isEdited ? <NextColumnInput>{salary}</NextColumnInput> : <NextColumn>{salary}</NextColumn>}
 			</th>
 			<th>
-				{isRowEdited ? (
-					<NextColumnInput value={equipmentCosts} />
+				{isEdited ? (
+					<NextColumnInput>{equipmentCosts}</NextColumnInput>
 				) : (
 					<NextColumn>{equipmentCosts}</NextColumn>
 				)}
 			</th>
 			<th>
-				{isRowEdited ? <NextColumnInput value={overheads} /> : <NextColumn>{overheads}</NextColumn>}
+				{isEdited ? <NextColumnInput>{overheads}</NextColumnInput> : <NextColumn>{overheads}</NextColumn>}
 			</th>
 			<th>
-				{isRowEdited ? (
-					<NextColumnInput value={estimatedProfit} />
+				{isEdited ? (
+					<NextColumnInput>{estimatedProfit}</NextColumnInput>
 				) : (
 					<NextColumn>{estimatedProfit}</NextColumn>
 				)}
