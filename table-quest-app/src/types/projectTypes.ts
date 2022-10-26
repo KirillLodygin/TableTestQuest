@@ -34,9 +34,10 @@ export type ThirdLevelEntityType = {
 	salary: number,
 	supportCosts: number,
 	total: number,
-	parentId: number,
-	level: 3,
+	parentId?: number,
+	level?: TableLevelType,
 	isEdited: boolean,
+	child?: []
 };
 
 export type SecondLevelEntityType = {
@@ -52,8 +53,8 @@ export type SecondLevelEntityType = {
 	salary: number,
 	supportCosts: number,
 	total: number,
-	parentId: number,
-	level: 2,
+	parentId?: number,
+	level?: TableLevelType,
 	isEdited: boolean,
 	child: ThirdLevelEntityType[] | [],
 };
@@ -71,13 +72,13 @@ export type FirstLevelEntityType = {
 	salary: number,
 	supportCosts: number,
 	total: number,
-	parentId: null,
-	level: 1,
+	parentId?: null,
+	level?: TableLevelType,
 	isEdited: boolean,
 	child: SecondLevelEntityType[] | [],
 };
 
-export type initialStateTypes = {
+export type InitialStateTypes = {
 	topMenu: MenuStringType[],
 	sideBarHeaderH2: string,
 	sideBarHeaderH3: string,
@@ -85,3 +86,15 @@ export type initialStateTypes = {
 	tableHeaders: tableSectionHeadersType[],
 	entity?: FirstLevelEntityType[],
 };
+
+export type EntityArrItemType = {
+	rowName: string;
+	equipmentCosts: number;
+	estimatedProfit: number;
+	overheads: number;
+	salary: number;
+	parentId: number | null;
+	id: number;
+	isEdited: boolean;
+	level: TableLevelType;
+}

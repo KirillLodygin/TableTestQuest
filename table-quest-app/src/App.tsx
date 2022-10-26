@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import './App.css';
 import { initialState } from './initialState';
-import { entityModel } from './entityModel';
 import { HeaderMenuBlock } from './view/components/HeaderMenuBlock';
 import { TableHeaderBlock } from './view/components/TableHeaderBlock';
 import { MainBlockWrapper } from './view/containers/MainBlockWrapper';
@@ -12,15 +11,13 @@ function App() {
 	const [tableTitle, setTableTitle] = useState<string>(
 		'Строительно-монтажные работы'
 	);
-	const [isSideBareSeen, setIsSideBareSeen] = useState<boolean>(false);
-	initialState.entity = entityModel;
+	const [isSideBareSeen, setIsSideBareSeen] = useState<boolean>(true);
 	const {
 		topMenu,
 		sideBarHeaderH2,
 		sideBarHeaderH3,
 		sideBarMenu,
 		tableHeaders,
-		entity,
 	} = initialState;
 
 	/* Фильтрация должна быть по tableTitle, но, поскольку у нас есть только одна таблица, фильтруем по 'Строительно-монтажные работы' */
@@ -37,7 +34,7 @@ function App() {
 				setTableTitle={setTableTitle}
 				isSideBareSeen={isSideBareSeen}
 			/>
-			<TableFields currentHeaders={currentHeaders} entity={entity} />
+			<TableFields currentHeaders={currentHeaders} />
 		</>
 	);
 

@@ -1,6 +1,6 @@
-import { initialStateTypes } from './types/projectTypes';
+import { InitialStateTypes } from './types/projectTypes';
 
-export const initialState: initialStateTypes = {
+export const initialState: InitialStateTypes = {
 	topMenu: [
 		{
 			title: 'Просмотр',
