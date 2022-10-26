@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import { TableBody } from '../components/TableBody';
 import { TableHeaders } from '../components/TableHeaders'
+import { entityModel } from '../../entityModel';
+import { EntityArrItemType } from '../../types/projectTypes';
+import { getEntitiesExtraction } from '../../utils/entityModification';
 
 type Props = {
 	currentHeaders: Array<string>,
@@ -21,11 +24,23 @@ const Table = styled.table`
 `;
 
 export const TableFields = ({ currentHeaders }: Props) => {
+	const [entityRowsArr, setEntityRowsArr] = useState<EntityArrItemType[]>([]);
+	const entities = entityModel;
+
+	let entityArr = useRef<EntityArrItemType[]>([]);
+
+	useMemo(() => {
+		entities.forEach((entity) => {
+			entityArr.current = getEntitiesExtraction({ entity });
+		});
+		setEntityRowsArr(entityArr.current);
+	}, [entities]);
+
 	return (
 		<TableBackground>
 			<Table>
 				<TableHeaders currentHeaders={currentHeaders}/>
-				<TableBody />
+				<TableBody entities={entityRowsArr} setEntityArr={setEntityRowsArr} />
 			</Table>
 		</TableBackground>
 	);
