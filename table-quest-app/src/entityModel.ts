@@ -63,7 +63,7 @@ export const entityModel: FirstLevelEntityType[] = [
 						supportCosts: 0,
 						total: 0,
 						parentId: 2,
-						isEdited: true,
+						isEdited: false,
 					},
 				],
 			},

@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { EntityArrItemType, TableLevelType } from '../../types/projectTypes';
+import {
+	EntityArrItemType,
+	FirstLevelEntityType,
+	TableLevelType,
+} from '../../types/projectTypes';
 import { LevelIcons } from './LevelIcons';
 
 type Props = {
-	entities: EntityArrItemType[],
-	id: number,
+	entities: FirstLevelEntityType[],
+	entityRowsArr: EntityArrItemType[],
+	rowID: number,
+	parentId: number | null,
 	level: TableLevelType,
 	rowName: string,
 	salary: number,
@@ -14,7 +20,8 @@ type Props = {
 	overheads: number,
 	estimatedProfit: number,
 	isEdited: boolean,
-	setEntityArr: (arr: EntityArrItemType[]) => void,
+	setEntityRowsArr: (arr: EntityArrItemType[]) => void,
+	setEntities: (arr: FirstLevelEntityType[]) => void,
 };
 
 const Row = styled.tr`
@@ -98,7 +105,9 @@ const NextColumnInput = styled(SecondColumnInput)`
 
 export const TableRow = ({
 	entities,
-	id,
+	entityRowsArr,
+	rowID,
+	parentId,
 	level,
 	rowName,
 	salary,
@@ -106,18 +115,21 @@ export const TableRow = ({
 	overheads,
 	estimatedProfit,
 	isEdited,
-	setEntityArr,
+	setEntityRowsArr,
+	setEntities,
 }: Props) => {
 	const [isCurrentEdited, setIsCurrenEdited] = useState<boolean>(isEdited);
 	const [currentRowName, setCurrentRowName] = useState<string>(rowName);
 	const [currentSalary, setCurrentSalary] = useState<number>(salary);
-	const [currentEquipmentCosts, setCurrentEquipmentCosts] = useState<number>(equipmentCosts);
+	const [currentEquipmentCosts, setCurrentEquipmentCosts] =
+		useState<number>(equipmentCosts);
 	const [currentOverheads, setCurrentOverheads] = useState<number>(overheads);
-	const [currentEstimatedProfit, setCurrentEstimatedProfit] = useState<number>(estimatedProfit);
+	const [currentEstimatedProfit, setCurrentEstimatedProfit] =
+		useState<number>(estimatedProfit);
 
 	const editRow = (currenId: number) => {
-		setEntityArr(
-			entities.map((item) => {
+		setEntityRowsArr(
+			entityRowsArr.map((item) => {
 				if (item.id === currenId) {
 					item.isEdited = true;
 				}
@@ -127,10 +139,13 @@ export const TableRow = ({
 		setIsCurrenEdited(true);
 	};
 
-	const handleKeyPress = (ev: React.KeyboardEvent<HTMLInputElement>, currenId: number) => {
+	const handleKeyPress = (
+		ev: React.KeyboardEvent<HTMLInputElement>,
+		currenId: number
+	) => {
 		if (ev.key === 'Enter') {
-			setEntityArr(
-				entities.map((item) => {
+			setEntityRowsArr(
+				entityRowsArr.map((item) => {
 					if (item.id === currenId) {
 						item.rowName = currentRowName;
 						item.salary = currentSalary;
@@ -146,10 +161,18 @@ export const TableRow = ({
 	};
 
 	return (
-		<Row onDoubleClick={() => editRow(id)}>
+		<Row onDoubleClick={() => editRow(rowID)}>
 			<th>
 				<FirstColumn>
-					<LevelIcons level={level} />
+					<LevelIcons
+						rowID={rowID}
+						parentId={parentId}
+						entities={entities}
+						entityRowsArr={entityRowsArr}
+						setEntities={setEntities}
+						setEntityRowsArr={setEntityRowsArr}
+						level={level}
+					/>
 				</FirstColumn>
 			</th>
 			<th>
@@ -158,7 +181,7 @@ export const TableRow = ({
 						autoFocus
 						value={currentRowName}
 						onChange={(e) => setCurrentRowName(e.target.value)}
-						onKeyPress={(e) => handleKeyPress(e, id)}
+						onKeyPress={(e) => handleKeyPress(e, rowID)}
 					/>
 				) : (
 					<SecondColumn>{currentRowName}</SecondColumn>
@@ -172,7 +195,7 @@ export const TableRow = ({
 						step="0.01"
 						min="0"
 						onChange={(e) => setCurrentSalary(Number(e.target.value))}
-						onKeyPress={(e) => handleKeyPress(e, id)}
+						onKeyPress={(e) => handleKeyPress(e, rowID)}
 					/>
 				) : (
 					<NextColumn>{currentSalary}</NextColumn>
@@ -186,7 +209,7 @@ export const TableRow = ({
 						step="0.01"
 						min="0"
 						onChange={(e) => setCurrentEquipmentCosts(Number(e.target.value))}
-						onKeyPress={(e) => handleKeyPress(e, id)}
+						onKeyPress={(e) => handleKeyPress(e, rowID)}
 					/>
 				) : (
 					<NextColumn>{currentEquipmentCosts}</NextColumn>
@@ -200,7 +223,7 @@ export const TableRow = ({
 						step="0.01"
 						min="0"
 						onChange={(e) => setCurrentOverheads(Number(e.target.value))}
-						onKeyPress={(e) => handleKeyPress(e, id)}
+						onKeyPress={(e) => handleKeyPress(e, rowID)}
 					/>
 				) : (
 					<NextColumn>{currentOverheads}</NextColumn>
@@ -214,7 +237,7 @@ export const TableRow = ({
 						step="0.01"
 						min="0"
 						onChange={(e) => setCurrentEstimatedProfit(Number(e.target.value))}
-						onKeyPress={(e) => handleKeyPress(e, id)}
+						onKeyPress={(e) => handleKeyPress(e, rowID)}
 					/>
 				) : (
 					<NextColumn>{currentEstimatedProfit}</NextColumn>

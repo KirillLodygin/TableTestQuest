@@ -34,9 +34,9 @@ export type ThirdLevelEntityType = {
 	salary: number,
 	supportCosts: number,
 	total: number,
-	parentId?: number,
+	parentId?: number | null,
 	level?: TableLevelType,
-	isEdited: boolean,
+	isEdited?: boolean,
 	child?: []
 };
 
@@ -53,10 +53,10 @@ export type SecondLevelEntityType = {
 	salary: number,
 	supportCosts: number,
 	total: number,
-	parentId?: number,
+	parentId?: number | null,
 	level?: TableLevelType,
-	isEdited: boolean,
-	child: ThirdLevelEntityType[] | [],
+	isEdited?: boolean,
+	child: ThirdLevelEntityType[],
 };
 
 export type FirstLevelEntityType = {
@@ -74,8 +74,8 @@ export type FirstLevelEntityType = {
 	total: number,
 	parentId?: null,
 	level?: TableLevelType,
-	isEdited: boolean,
-	child: SecondLevelEntityType[] | [],
+	isEdited?: boolean,
+	child: SecondLevelEntityType[],
 };
 
 export type InitialStateTypes = {

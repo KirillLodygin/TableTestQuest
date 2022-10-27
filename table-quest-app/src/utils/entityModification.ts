@@ -30,7 +30,7 @@ export const getEntitiesExtraction = ({parentId = null, entity, entityArr = []}:
 		salary: entity.salary,
 		parentId,
 		id: entity.id,
-		isEdited: false,
+		isEdited: (entity.isEdited) ? entity.isEdited : false,
 		level: getLevel(entity, parentId)
 	};
 
