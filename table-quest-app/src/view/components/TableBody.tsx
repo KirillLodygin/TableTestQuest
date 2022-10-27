@@ -4,15 +4,15 @@ import { EntityArrItemType } from '../../types/projectTypes';
 import { TableRow } from './TableRow';
 
 type Props = {
-	entities: EntityArrItemType[];
+	entityRowsArr: EntityArrItemType[];
 	setEntityArr: (arr: EntityArrItemType[]) => void;
 };
 
-export const TableBody = ({ entities, setEntityArr }: Props) => {
+export const TableBody = ({ entityRowsArr, setEntityArr }: Props) => {
 
 	return (
 		<>
-			{entities.map(
+			{entityRowsArr.map(
 				({
 					id,
 					level,
@@ -25,7 +25,7 @@ export const TableBody = ({ entities, setEntityArr }: Props) => {
 				}) => (
 					<TableRow
 						key={id}
-						entities={entities}
+						entities={entityRowsArr}
 						id={id}
 						level={level}
 						rowName={rowName}

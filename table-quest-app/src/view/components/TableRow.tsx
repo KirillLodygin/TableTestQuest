@@ -32,19 +32,18 @@ const TableCell = styled.div`
 	line-height: 130%;
 	letter-spacing: 0.1px;
 	box-sizing: border-box;
-  transition: .2s;
-  animation: show .5s 1;
-  animation-fill-mode: forwards;
-  animation-delay: .1s;
-
-  @keyframes show{
-    0%{
-      opacity:0;
-    }
-    100% {
-      opacity:1;
-    }
-  }
+	transition: 0.2s;
+	animation: show 0.5s 1;
+	animation-fill-mode: forwards;
+	animation-delay: 0.1s;
+	@keyframes show {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
 `;
 
 const FirstColumn = styled(TableCell)`
@@ -58,7 +57,7 @@ const SecondColumn = styled(TableCell)`
 	color: #ffffff;
 `;
 
-const SecondColumnInput = styled.div`
+const SecondColumnInput = styled.input`
 	box-sizing: border-box;
 	width: 518px;
 	height: 36px;
@@ -66,26 +65,25 @@ const SecondColumnInput = styled.div`
 	border-radius: 6px;
 	padding: 8px 10px;
 	color: #71717a;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 130%;
-  letter-spacing: 0.1px;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 130%;
+	letter-spacing: 0.1px;
 	background-color: #202124;
 	text-align: left;
-  opacity: 0; 
-  transition: .2s;
-  animation: show .5s 1;
-  animation-fill-mode: forwards;
-  animation-delay: .1s;
-
-  @keyframes show{
-    0%{
-      opacity:0;
-    }
-    100% {
-      opacity:1;
-    }
-  }
+	opacity: 0;
+	transition: 0.2s;
+	animation: show 0.5s 1;
+	animation-fill-mode: forwards;
+	animation-delay: 0.1s;
+	@keyframes show {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
 `;
 
 const NextColumn = styled(TableCell)`
@@ -110,13 +108,41 @@ export const TableRow = ({
 	isEdited,
 	setEntityArr,
 }: Props) => {
+	const [isCurrentEdited, setIsCurrenEdited] = useState<boolean>(isEdited);
+	const [currentRowName, setCurrentRowName] = useState<string>(rowName);
+	const [currentSalary, setCurrentSalary] = useState<number>(salary);
+	const [currentEquipmentCosts, setCurrentEquipmentCosts] = useState<number>(equipmentCosts);
+	const [currentOverheads, setCurrentOverheads] = useState<number>(overheads);
+	const [currentEstimatedProfit, setCurrentEstimatedProfit] = useState<number>(estimatedProfit);
+
 	const editRow = (currenId: number) => {
-		setEntityArr(entities.map((item) => {
-			if (item.id === currenId) {
-				item.isEdited = true;
-			}
-			return item;
-		}));
+		setEntityArr(
+			entities.map((item) => {
+				if (item.id === currenId) {
+					item.isEdited = true;
+				}
+				return item;
+			})
+		);
+		setIsCurrenEdited(true);
+	};
+
+	const handleKeyPress = (ev: React.KeyboardEvent<HTMLInputElement>, currenId: number) => {
+		if (ev.key === 'Enter') {
+			setEntityArr(
+				entities.map((item) => {
+					if (item.id === currenId) {
+						item.rowName = currentRowName;
+						item.salary = currentSalary;
+						item.equipmentCosts = currentEquipmentCosts;
+						item.overheads = currentOverheads;
+						item.estimatedProfit = currentEstimatedProfit;
+					}
+					return item;
+				})
+			);
+			setIsCurrenEdited(false);
+		}
 	};
 
 	return (
@@ -127,30 +153,71 @@ export const TableRow = ({
 				</FirstColumn>
 			</th>
 			<th>
-				{isEdited ? (
-					<SecondColumnInput>{rowName}</SecondColumnInput>
+				{isCurrentEdited ? (
+					<SecondColumnInput
+						autoFocus
+						value={currentRowName}
+						onChange={(e) => setCurrentRowName(e.target.value)}
+						onKeyPress={(e) => handleKeyPress(e, id)}
+					/>
 				) : (
-					<SecondColumn>{rowName}</SecondColumn>
+					<SecondColumn>{currentRowName}</SecondColumn>
 				)}
 			</th>
 			<th>
-				{isEdited ? <NextColumnInput>{salary}</NextColumnInput> : <NextColumn>{salary}</NextColumn>}
-			</th>
-			<th>
-				{isEdited ? (
-					<NextColumnInput>{equipmentCosts}</NextColumnInput>
+				{isCurrentEdited ? (
+					<NextColumnInput
+						value={String(currentSalary)}
+						type="number"
+						step="0.01"
+						min="0"
+						onChange={(e) => setCurrentSalary(Number(e.target.value))}
+						onKeyPress={(e) => handleKeyPress(e, id)}
+					/>
 				) : (
-					<NextColumn>{equipmentCosts}</NextColumn>
+					<NextColumn>{currentSalary}</NextColumn>
 				)}
 			</th>
 			<th>
-				{isEdited ? <NextColumnInput>{overheads}</NextColumnInput> : <NextColumn>{overheads}</NextColumn>}
+				{isCurrentEdited ? (
+					<NextColumnInput
+						value={String(currentEquipmentCosts)}
+						type="number"
+						step="0.01"
+						min="0"
+						onChange={(e) => setCurrentEquipmentCosts(Number(e.target.value))}
+						onKeyPress={(e) => handleKeyPress(e, id)}
+					/>
+				) : (
+					<NextColumn>{currentEquipmentCosts}</NextColumn>
+				)}
 			</th>
 			<th>
-				{isEdited ? (
-					<NextColumnInput>{estimatedProfit}</NextColumnInput>
+				{isCurrentEdited ? (
+					<NextColumnInput
+						value={String(currentOverheads)}
+						type="number"
+						step="0.01"
+						min="0"
+						onChange={(e) => setCurrentOverheads(Number(e.target.value))}
+						onKeyPress={(e) => handleKeyPress(e, id)}
+					/>
 				) : (
-					<NextColumn>{estimatedProfit}</NextColumn>
+					<NextColumn>{currentOverheads}</NextColumn>
+				)}
+			</th>
+			<th>
+				{isCurrentEdited ? (
+					<NextColumnInput
+						value={String(currentEstimatedProfit)}
+						type="number"
+						step="0.01"
+						min="0"
+						onChange={(e) => setCurrentEstimatedProfit(Number(e.target.value))}
+						onKeyPress={(e) => handleKeyPress(e, id)}
+					/>
+				) : (
+					<NextColumn>{currentEstimatedProfit}</NextColumn>
 				)}
 			</th>
 		</Row>

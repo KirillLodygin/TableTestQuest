@@ -1,10 +1,10 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { TableBody } from '../components/TableBody';
 import { TableHeaders } from '../components/TableHeaders'
 import { entityModel } from '../../entityModel';
-import { EntityArrItemType } from '../../types/projectTypes';
+import { EntityArrItemType, FirstLevelEntityType } from '../../types/projectTypes';
 import { getEntitiesExtraction } from '../../utils/entityModification';
 
 type Props = {
@@ -25,26 +25,19 @@ const Table = styled.table`
 
 export const TableFields = ({ currentHeaders }: Props) => {
 	const [entityRowsArr, setEntityRowsArr] = useState<EntityArrItemType[]>([]);
-	const entities = entityModel;
-
-	let entityArr = useRef<EntityArrItemType[]>([]);
+	const [entity, setEntity] = useState< FirstLevelEntityType[]>(entityModel);
 
 	useMemo(() => {
-		entities.forEach((entity) => {
-			entityArr.current = getEntitiesExtraction({ entity });
+		entity.forEach((entity) => {
+			setEntityRowsArr(getEntitiesExtraction({ entity }));
 		});
-		setEntityRowsArr(entityArr.current);
-	}, [entities]);
-
-	useMemo(() => {
-		console.log(entityRowsArr);
-	}, [entityRowsArr]);
+	}, [entity]);
 
 	return (
 		<TableBackground>
 			<Table>
 				<TableHeaders currentHeaders={currentHeaders}/>
-				<TableBody entities={entityRowsArr} setEntityArr={setEntityRowsArr} />
+				<TableBody entityRowsArr={entityRowsArr} setEntityArr={setEntityRowsArr} />
 			</Table>
 		</TableBackground>
 	);
