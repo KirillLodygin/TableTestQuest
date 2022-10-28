@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
 import {
 	EntityArrItemType,
 	FirstLevelEntityType,
+	ModelToCreateType,
+	SCREEN_TYPE,
 	TableLevelType,
 } from '../../types/projectTypes';
 import { LevelIcons } from './LevelIcons';
+import { updateRowResponse } from '../../utils/reqeusts';
 
 type Props = {
 	entities: FirstLevelEntityType[],
 	entityRowsArr: EntityArrItemType[],
 	rowID: number,
-	parentId: number | null,
+	parentId: number | undefined,
 	level: TableLevelType,
 	rowName: string,
 	salary: number,
@@ -20,8 +23,10 @@ type Props = {
 	overheads: number,
 	estimatedProfit: number,
 	isEdited: boolean,
+	eID: string,
 	setEntityRowsArr: (arr: EntityArrItemType[]) => void,
 	setEntities: (arr: FirstLevelEntityType[]) => void,
+	setCurrenScreen: (arg: SCREEN_TYPE) => void,
 };
 
 const Row = styled.tr`
@@ -117,6 +122,8 @@ export const TableRow = ({
 	isEdited,
 	setEntityRowsArr,
 	setEntities,
+	setCurrenScreen,
+	eID,
 }: Props) => {
 	const [isCurrentEdited, setIsCurrenEdited] = useState<boolean>(isEdited);
 	const [currentRowName, setCurrentRowName] = useState<string>(rowName);
@@ -127,7 +134,35 @@ export const TableRow = ({
 	const [currentEstimatedProfit, setCurrentEstimatedProfit] =
 		useState<number>(estimatedProfit);
 
-	const editRow = (currenId: number) => {
+	const updateRow = useCallback(
+		async (eID: string) => {
+			const model: ModelToCreateType = {
+				equipmentCosts: currentEquipmentCosts,
+				estimatedProfit: currentEstimatedProfit,
+				machineOperatorSalary: 0,
+				mainCosts: 0,
+				materials: 0,
+				mimExploitation: 0,
+				overheads: currentOverheads,
+				parentId: parentId || 0,
+				rowName: currentRowName,
+				salary: currentSalary,
+				supportCosts: 0,
+			};
+			try {
+				const resp = await updateRowResponse(eID, String(rowID), model);
+				const data = await resp;
+				if (data) {
+					setIsCurrenEdited(false);
+				}
+			} catch (e) {
+				setCurrenScreen(SCREEN_TYPE.FAIL);
+			}
+		},
+		[currentEquipmentCosts, currentEstimatedProfit, currentOverheads, currentRowName, currentSalary, parentId, rowID, setCurrenScreen]
+	);
+
+	const editRow = (currenId: number | unknown) => {
 		setEntityRowsArr(
 			entityRowsArr.map((item) => {
 				if (item.id === currenId) {
@@ -141,7 +176,7 @@ export const TableRow = ({
 
 	const handleKeyPress = (
 		ev: React.KeyboardEvent<HTMLInputElement>,
-		currenId: number
+		currenId?: number
 	) => {
 		if (ev.key === 'Enter') {
 			setEntityRowsArr(
@@ -156,7 +191,7 @@ export const TableRow = ({
 					return item;
 				})
 			);
-			setIsCurrenEdited(false);
+			updateRow(eID);
 		}
 	};
 
@@ -165,6 +200,7 @@ export const TableRow = ({
 			<th>
 				<FirstColumn>
 					<LevelIcons
+						eID={eID}
 						rowID={rowID}
 						parentId={parentId}
 						entities={entities}
@@ -182,6 +218,7 @@ export const TableRow = ({
 						value={currentRowName}
 						onChange={(e) => setCurrentRowName(e.target.value)}
 						onKeyPress={(e) => handleKeyPress(e, rowID)}
+						placeholder={currentRowName}
 					/>
 				) : (
 					<SecondColumn>{currentRowName}</SecondColumn>

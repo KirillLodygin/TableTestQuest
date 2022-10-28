@@ -14,7 +14,7 @@ export const entityModel: FirstLevelEntityType[] = [
 		salary: 34000,
 		supportCosts: 0,
 		total: 0,
-		parentId: null,
+		parentId: 0,
 		isEdited: false,
 		child: [
 			{

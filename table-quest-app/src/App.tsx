@@ -1,6 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
+
 import { initialState } from './initialState';
+
+import { SCREEN_TYPE } from './types/projectTypes';
+import { createEntityResponse } from './utils/reqeusts';
+
 import { HeaderMenuBlock } from './view/components/HeaderMenuBlock';
 import { TableHeaderBlock } from './view/components/TableHeaderBlock';
 import { MainBlockWrapper } from './view/containers/MainBlockWrapper';
@@ -11,7 +16,12 @@ function App() {
 	const [tableTitle, setTableTitle] = useState<string>(
 		'Строительно-монтажные работы'
 	);
+	const [eID, setEID] = useState<number | undefined>();
 	const [isSideBareSeen, setIsSideBareSeen] = useState<boolean>(true);
+	const [currentScreen, setCurrenScreen] = useState<SCREEN_TYPE>(
+		SCREEN_TYPE.START
+	);
+
 	const {
 		topMenu,
 		sideBarHeaderH2,
@@ -19,6 +29,25 @@ function App() {
 		sideBarMenu,
 		tableHeaders,
 	} = initialState;
+
+
+	const createEID = async () => {
+		try {
+			const resp = await createEntityResponse();
+			const data = await resp;
+			if (data.id) {
+				setEID(data.id);
+			}
+		} catch (e) {
+			setCurrenScreen(SCREEN_TYPE.FAIL);
+		}
+	};
+
+	useEffect(() => {
+		if (!eID) {
+			createEID();
+		}
+	}, [eID]);
 
 	/* Фильтрация должна быть по tableTitle, но, поскольку у нас есть только одна таблица, фильтруем по 'Строительно-монтажные работы' */
 	const currentHeaders = useMemo(() => {
@@ -34,11 +63,11 @@ function App() {
 				setTableTitle={setTableTitle}
 				isSideBareSeen={isSideBareSeen}
 			/>
-			<TableFields currentHeaders={currentHeaders} />
+			<TableFields eID={(eID) ? String(eID) : ''} currentHeaders={currentHeaders} setCurrenScreen={setCurrenScreen} />
 		</>
 	);
 
-	return (
+	return currentScreen === SCREEN_TYPE.START ? (
 		<div className="App">
 			<HeaderMenuBlock topMenu={topMenu} />
 			<TableHeaderBlock
@@ -50,6 +79,8 @@ function App() {
 			/>
 			<MainBlockWrapper>{mainField}</MainBlockWrapper>
 		</div>
+	) : (
+		<div>Какая-то ошибка</div>
 	);
 }
 

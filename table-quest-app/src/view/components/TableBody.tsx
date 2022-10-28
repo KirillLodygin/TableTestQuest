@@ -1,16 +1,18 @@
 import React from 'react';
 
-import { EntityArrItemType, FirstLevelEntityType } from '../../types/projectTypes';
+import { EntityArrItemType, FirstLevelEntityType, SCREEN_TYPE } from '../../types/projectTypes';
 import { TableRow } from './TableRow';
 
 type Props = {
 	entities: FirstLevelEntityType[];
 	entityRowsArr: EntityArrItemType[];
+	eID: string;
 	setEntityRowsArr: (arr: EntityArrItemType[]) => void;
 	setEntities: (arr: FirstLevelEntityType[]) => void;
+	setCurrenScreen: (arg: SCREEN_TYPE) => void;
 };
 
-export const TableBody = ({ entities, entityRowsArr, setEntityRowsArr, setEntities }: Props) => {
+export const TableBody = ({ entities, entityRowsArr, eID, setEntityRowsArr, setEntities, setCurrenScreen }: Props) => {
 
 	return (
 		<>
@@ -41,6 +43,8 @@ export const TableBody = ({ entities, entityRowsArr, setEntityRowsArr, setEntiti
 						isEdited={isEdited}
 						setEntityRowsArr={setEntityRowsArr}
 						setEntities={setEntities}
+						setCurrenScreen={setCurrenScreen}
+						eID={eID}
 					/>
 				)
 			)}
