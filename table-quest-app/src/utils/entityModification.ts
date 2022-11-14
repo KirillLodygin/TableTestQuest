@@ -4,13 +4,13 @@ import { TABLE_LEVELS } from '../constants/tableConstants';
 type EntityType = FirstLevelEntityType | SecondLevelEntityType | ThirdLevelEntityType;
 
 type Props = {
-	parentId?: null | number;
+	parentId?: number;
 	entity: FirstLevelEntityType | SecondLevelEntityType | ThirdLevelEntityType;
 	entityArr?: EntityArrItemType[];
 };
 
-const getLevel = (entity: EntityType, parentId: null | number) => {
-	if (parentId === null) {
+const getLevel = (entity: EntityType, parentId?: number) => {
+	if (!parentId) {
 		return TABLE_LEVELS.first
 	}
 
@@ -21,7 +21,7 @@ const getLevel = (entity: EntityType, parentId: null | number) => {
 	return TABLE_LEVELS.third;
 };
 
-export const getEntitiesExtraction = ({parentId = null, entity, entityArr = []}: Props) => {
+export const getEntitiesExtraction = ({parentId, entity, entityArr = []}: Props) => {
 	const rowObj = {
 		rowName: entity.rowName,
 		equipmentCosts: entity.equipmentCosts,
